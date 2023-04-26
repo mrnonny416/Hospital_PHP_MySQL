@@ -1,7 +1,12 @@
 <?php
 session_start(); // เรียกใช้ session
-
+$incorrect_password = false;
+if (isset($_SESSION['username'])) {
+    header("Location: dashboard.php");
+    exit;
+}
 if (isset($_POST['submit'])) {
+    date_default_timezone_set("Asia/Bangkok");
     require('db_connect.php'); // ดึงไฟล์เชื่อมต่อฐานข้อมูล
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -14,7 +19,7 @@ if (isset($_POST['submit'])) {
     if (mysqli_num_rows($result) == 1) {
         $row = mysqli_fetch_assoc($result);
         $_SESSION['username'] = $row['username']; // เก็บ session ชื่อผู้ใช้
-        $_SESSION['login_time'] = time(); // เก็บ session เวลา login
+        $_SESSION['user_level'] = $row['user_level']; // เก็บ session เวลา login
 
         // เพิ่มประวัติการเข้าสู่ระบบในตาราง login_log
         $ip_address = $_SERVER['REMOTE_ADDR'];
@@ -32,7 +37,7 @@ if (isset($_POST['submit'])) {
         $login_flag = 1; // สถานะการ login 1=login ไม่สำเร็จ
         $sql = "INSERT INTO login_log (username, login_flag, ip_address, last_update) VALUES ('$username', '$login_flag', '$ip_address', '$login_time')";
         mysqli_query($conn, $sql);
-
+        $incorrect_password = true;
         $error_message = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
     }
 }
@@ -43,18 +48,43 @@ if (isset($_POST['submit'])) {
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Login</title>
 </head>
 
 <body>
-    <h2>Login Form</h2>
-    <form method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br><br>
-        <input type="submit" name="submit" value="Login">
-    </form>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-center">Login Form</h2>
+                    </div>
+                    <?php if ($incorrect_password) { ?>
+                        <div class="alert alert-danger text-center" role="alert">
+                            username หรือ password ไม่ถูกต้อง
+                        </div>
+                    <?php } ?>
+                    <div class="card-body">
+                        <form method="POST">
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <input type="text" id="username" name="username" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" name="password" class="form-control" required>
+                            </div>
+                            <button type="submit" name="submit" class="btn btn-primary">Login</button>
+                            <a href="register.php" class="btn btn-link">Register</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

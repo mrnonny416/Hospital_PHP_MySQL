@@ -7,7 +7,7 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-if ($_SESSION['user_level'] != 0) {
+if ($_SESSION['user_level'] == 2) {
     header("Location: dashboard.php");
     exit;
 }
@@ -21,7 +21,13 @@ if (isset($_GET['username'])) {
 
     if ($result) {
         // User data deleted successfully
-        echo "<script>alert('User data deleted successfully.'); window.location='dashboard.php';</script>";
+        if ($_SESSION['username'] == $username) {
+            session_unset();
+            session_destroy();
+            header("Location: index.php");
+        } else {
+            echo "<script>alert('User data deleted successfully.'); window.location='dashboard.php';</script>";
+        }
         exit;
     } else {
         // Error occurred while deleting user data
