@@ -61,7 +61,12 @@
                     echo "<tr>";
                     echo "<td>" . $row['id'] . "</td>";
                     echo "<td>" . $row['username'] . "</td>";
-                    echo "<td>" . $row['login_flag'] . "</td>";
+
+                    if ($row['login_flag'] == 1) {
+                        echo "<td>Login Fail</td>";
+                    } else {
+                        echo "<td>Login Pass</td>";
+                    }
                     echo "<td>" . $row['ip_address'] . "</td>";
                     echo "<td>" . $row['last_update'] . "</td>";
                     echo "</tr>";

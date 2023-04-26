@@ -19,7 +19,12 @@ if (isset($_POST['submit'])) {
     $ref_code = $_POST['ref_code'];
     $ref_remark = $_POST['ref_remark'];
     $remark = $_POST['remark'];
-    $user_level_selected = $_POST['user_level'];
+    if ($_SESSION['user_level'] != 0) {
+        $user_level_selected = $_SESSION['user_level'];
+    } else {
+        $user_level_selected = $_POST['user_level'];
+        $_SESSION['user_level'] = $user_level_selected;
+    }
     date_default_timezone_set("Asia/Bangkok");
     $edit_time = date('Y-m-d H:i:s');
     $query = "UPDATE members SET fname = '$fname', lname = '$lname', email = '$email',tel='$tel',address='$address',ref_code='$ref_code',ref_remark='$ref_remark',remark='$remark' ,last_update = '$edit_time' , user_level='$user_level_selected' WHERE username = '$username_select'";

@@ -54,7 +54,7 @@ if (isset($_POST['submit'])) {
         // ถ้าไม่มีให้ทำการเพิ่มข้อมูลเข้าไปในฐานข้อมูล
         date_default_timezone_set("Asia/Bangkok");
         $register_time = date('Y-m-d H:i:s');
-        $sql = "INSERT INTO members (username,password,user_level,fname, lname, tel, email,address,ref_code,ref_remark,last_update) VALUES ('$username','$password',2,'$firstname', '$lastname', '$phone', '$email','$address','$ref_code','$ref_remark',$register_time)";
+        $sql = "INSERT INTO members (username,password,user_level,fname, lname, tel, email,address,ref_code,ref_remark,last_update) VALUES ('$username','$password',2,'$firstname', '$lastname', '$phone', '$email','$address','$ref_code','$ref_remark','$register_time')";
         if ($conn->query($sql) === TRUE) {
             // เมื่อเพิ่มข้อมูลสำเร็จให้แจ้งเตือนและกลับไปยังหน้าแรก
             echo "<script>alert('New user created successfully'); window.location='index.php';</script>";
